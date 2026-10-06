@@ -69,3 +69,7 @@ ON sales.order_items(discount)
 WHERE discount > 0;
 
 select * from sales.order_items where discount= 0.5
+
+select discount from sales.order_items where discount= 0.5
+
+select discount from sales.order_items where discount> 0.5
