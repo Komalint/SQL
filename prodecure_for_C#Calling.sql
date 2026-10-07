@@ -46,7 +46,7 @@ end
 -- update bikeshop details
 alter proc udp_updatetBike_data(
 	@id int,
-	@bName varchar, 
+	@bName varchar(50), 
 	@bPrice decimal(10,2),
 	@msg varchar(100) out
 )
