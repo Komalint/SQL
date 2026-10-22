@@ -128,5 +128,114 @@ INSERT INTO tblEmployee (FirstName, LastName, DateOfBirth, Salary, Gender, Depar
 ('Larry', 'Edwards', '04/15/1983', 67000, 'Male', 'Operations', 'UK'),
 ('Cynthia', 'Collins', '09/08/1979', 76000, 'Female', 'Finance', 'India');
 
+EXEC sp_rename 'tblEmployee.Employeeld', 'EmployeeId', 'COLUMN';
+
+-- procedure insert
+create proc udp_InsertEmployeeDetails(
+@FirstName nvarchar(50), 
+@LastName nvarchar(50), 
+@DateOfBirth datetime, 
+@Salary int, 
+@Gender nvarchar(50), 
+@DepartmentName nvarchar(50), 
+@Country nvarchar(50)
+)as
+begin
+
+-- conditions can be applied
+	insert into tblEmployee(
+	[FirstName], 
+	[LastName], 
+	[DateOfBirth], 
+	[Salary], 
+	[Gender], 
+	[DepartmentName], 
+	[Country]) 
+	values(
+	@FirstName, 
+	@LastName, 
+	@DateOfBirth, 
+	@Salary, 
+	@Gender, 
+	@DepartmentName, 
+	@Country)
+end
+
+--procedure get all user
+alter proc udp_GetallUsers
+as
+begin
+	select
+		[EmployeeId],
+		[FirstName], 
+		[LastName], 
+		[DateOfBirth], 
+		[Salary], 
+		[Gender], 
+		[DepartmentName], 
+		[Country]
+	from tblEmployee
+end
+
+exec udp_GetallUsers
+
+
+
+--procedure get user by id
+alter proc udp_GetUserById(
+@id int
+)
+as
+begin
+	select
+		[FirstName], 
+		[LastName], 
+		[DateOfBirth], 
+		[Salary], 
+		[Gender], 
+		[DepartmentName], 
+		[Country]
+	from tblEmployee
+	where [EmployeeId]= @id
+end
+
+
+
+--procedure delete user by id
+alter proc udp_DeleteUserById(
+@id int
+)
+as
+begin
+	delete 
+	from tblEmployee 
+	where [EmployeeId]= @id
+end
+
+--procedure  update employee details via id
+alter PROC udp_UpdateEmployeeDetails
+(
+    @EmployeeId INT,
+    @FirstName VARCHAR(50) = NULL,
+    @LastName VARCHAR(50) = NULL,
+    @DateOfBirth DATE = NULL,
+    @Salary DECIMAL(10,2) = NULL,
+    @Gender VARCHAR(10) = NULL,
+    @DepartmentName VARCHAR(50) = NULL,
+    @Country VARCHAR(50) = NULL
+)
+AS
+BEGIN
+    UPDATE tblEmployee
+    SET
+        FirstName = ISNULL(@FirstName, FirstName),
+        LastName = ISNULL(@LastName, LastName),
+        DateOfBirth = ISNULL(@DateOfBirth, DateOfBirth),
+        Salary = ISNULL(@Salary, Salary),
+        Gender = ISNULL(@Gender, Gender),
+        DepartmentName = ISNULL(@DepartmentName, DepartmentName),
+        Country = ISNULL(@Country, Country)
+    WHERE EmployeeId = @EmployeeId;
+END
 
 select * from tblEmployee
