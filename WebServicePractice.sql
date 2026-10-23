@@ -159,7 +159,7 @@ begin
 	@Gender, 
 	@DepartmentName, 
 	@Country)
-end
+end;
 
 --procedure get all user
 alter proc udp_GetallUsers
@@ -239,3 +239,32 @@ BEGIN
 END
 
 select * from tblEmployee
+
+
+-- dynamic paging procedure
+
+create proc udp_GetEmployees_by_PageIndex_and_PageSize(
+@PageIndex int ,
+@PageSize int,
+@TotalRows int output)
+as 
+begin
+	declare @StartRowIndex int
+	declare @EndRowIndex int
+	set @StartRowIndex = (@PageIndex * @PageSize)+1;
+	set @EndRowIndex = (@PageIndex + 1)*@PageSize;
+	select * 
+	from
+	(select ROW_NUMBER() over(order by EmployeeId) as RowNumber,*
+	from tblEmployee) Employees
+	where RowNumber >= @StartRowIndex and RowNumber <= @EndRowIndex
+
+
+	select @TotalRows = COUNT(*) from tblEmployee
+end;
+
+declare @totalrow int
+exec udp_GetEmployees_by_PageIndex_and_PageSize 0, 20, @totalrow out
+
+print @totalrow
+
