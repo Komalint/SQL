@@ -193,3 +193,22 @@ BEGIN
     WHERE OrderId = @OrderId
 END
 GO
+
+
+
+ALTER TABLE hra.Orders
+ADD CONSTRAINT FK_Orders_Stores
+FOREIGN KEY (StoreId)
+REFERENCES hra.Stores(StoreId);
+GO
+
+
+SELECT *
+FROM hra.Orders
+WHERE StoreId NOT IN
+(
+    SELECT StoreId
+    FROM hra.Stores
+);
+
+delete from hra.Orders where StoreId=0;
